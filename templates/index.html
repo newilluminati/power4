@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Puissance 4 — interactif</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="topbar">
+      <h1>Puissance 4</h1>
+      <div class="controls">
+        <div id="status" class="status">Chargement…</div>
+        <button id="resetBtn" class="btn">Réinitialiser</button>
+      </div>
+    </header>
+
+    <section class="game-area">
+      <div id="cols" class="columns"></div>
+
+      <div id="board" class="board" aria-hidden="false"></div>
+    </section>
+
+    <footer class="legend">
+      <div class="legend-item"><span class="dot p1"></span> Joueur 1</div>
+      <div class="legend-item"><span class="dot p2"></span> Joueur 2</div>
+    </footer>
+  </main>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
