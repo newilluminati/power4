@@ -16,30 +16,56 @@ async function resetGame() {
   return await res.json();
 }
 
-async function setMode(mode) {
-  const res = await fetch('/api/set_mode', { 
-    method: 'POST', 
-    headers: { 'Content-Type': 'application/json' }, 
-    body: JSON.stringify({ mode }) 
-  });
-  return await res.json();
+
+
+// Menu Navigation
+const mainMenu = document.getElementById('mainMenu');
+const creditsScreen = document.getElementById('creditsScreen');
+const gameScreen = document.getElementById('gameScreen');
+const playBtn = document.getElementById('playBtn');
+const creditsBtn = document.getElementById('creditsBtn');
+const backFromCreditsBtn = document.getElementById('backFromCreditsBtn');
+const backToMenuBtn = document.getElementById('backToMenuBtn');
+
+// Navigation functions
+function showScreen(screen) {
+  mainMenu.classList.add('hidden');
+  creditsScreen.classList.add('hidden');
+  gameScreen.classList.add('hidden');
+  
+  screen.classList.remove('hidden');
 }
+
+// Event listeners for menu navigation
+playBtn.addEventListener('click', () => {
+  showScreen(gameScreen);
+  // Initialize game if not already done
+  if (!boardEl.children.length) {
+    initGame();
+  }
+});
+
+creditsBtn.addEventListener('click', () => {
+  showScreen(creditsScreen);
+});
+
+backFromCreditsBtn.addEventListener('click', () => {
+  showScreen(mainMenu);
+});
 
 const boardEl = document.getElementById('board');
 const colsEl = document.getElementById('cols');
 const statusEl = document.getElementById('status');
 const resetBtn = document.getElementById('resetBtn');
-const modeSelect = document.getElementById('mode');
 
 resetBtn.addEventListener('click', async () => {
   await resetGame();
   renderFromState(await fetchState());
 });
 
-if (modeSelect) {
-  modeSelect.addEventListener('change', async () => {
-    const state = await setMode(modeSelect.value);
-    renderFromState(state);
+if (backToMenuBtn) {
+  backToMenuBtn.addEventListener('click', () => {
+    showScreen(mainMenu);
   });
 }
 
@@ -136,8 +162,7 @@ function renderFromState(state, placed) {
   } else if (state.draw) {
     statusEl.textContent = `Match nul.`;
   } else {
-    let modeLabel = modeToLabel(state.mode);
-    statusEl.textContent = `${modeLabel} • Tour du joueur ${state.current_player}`;
+    statusEl.textContent = `Tour du joueur ${state.current_player}`;
   }
 
   boardEl.innerHTML = '';
@@ -166,26 +191,13 @@ function renderFromState(state, placed) {
       }
     }
   }
-
-  if (modeSelect && state.mode) {
-    modeSelect.value = state.mode;
-  }
 }
 
-function modeToLabel(mode) {
-  switch (mode) {
-    case 'pvp': return 'Mode: JcJ';
-    case 'pve_easy': return 'Mode: JcIA (facile)';
-    case 'pve_smart': return 'Mode: JcIA (intelligent)';
-    case 'anti_pvp': return 'Mode: Anti-gravité JcJ';
-    case 'anti_pve_easy': return 'Mode: Anti-gravité JcIA (facile)';
-    case 'anti_pve_smart': return 'Mode: Anti-gravité JcIA (intelligent)';
-    default: return 'Mode';
-  }
-}
+// Initialize with main menu
+showScreen(mainMenu);
 
-(async function init() {
+// Game initialization function
+function initGame() {
   createCols();
-  const state = await fetchState();
-  renderFromState(state);
-})();
+  fetchState().then(state => renderFromState(state));
+}
