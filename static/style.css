@@ -107,7 +107,7 @@ body{
   background: radial-gradient(circle at 10% 10%, #071026 0%, #041022 60%);
   display: flex;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;   
   z-index: 1000;
 }
 
